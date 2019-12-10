@@ -191,7 +191,8 @@ app.use(urlencoded());
 
 
 var port =8080
+var portServer=80
 var router=new MidelContorler().router
-var aplication=new App(port,router,app)
+var aplication=new App(portServer,router,app)
 aplication.listen()
 //(new App(8080, new MidelContorler().router,app)).listen()

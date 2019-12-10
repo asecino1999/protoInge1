@@ -120,6 +120,14 @@ var MidelContorler = /** @class */ (function () {
             var round = _this.searchRoundPokemon(position.x, position.y);
             res.json(round);
         });
+        this.router.post('/getData', function (req, res) {
+            var nombre = req.body.nombre;
+            // posibilidades 
+            var password = req.body.password;
+            var token = req.body.token;
+            // buscar poquemones alrededor 
+            res.json({});
+        });
     };
     return MidelContorler;
 }());
@@ -129,7 +137,8 @@ app.use(body_parser_1.raw());
 app.use(body_parser_1.text());
 app.use(body_parser_1.urlencoded());
 var port = 8080;
+var portServer = 80;
 var router = new MidelContorler().router;
-var aplication = new App(port, router, app);
+var aplication = new App(portServer, router, app);
 aplication.listen();
 //(new App(8080, new MidelContorler().router,app)).listen()
