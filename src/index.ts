@@ -1,6 +1,5 @@
-import * as express from 'express'
-
-import { Application } from 'express';
+import  express from 'express';
+import { Application, Router } from 'express';
 
 
 import poke from  './pokerequest';
@@ -16,11 +15,10 @@ import {
 } from 'body-parser';
 
 
-
 class App {
     public app: Application
     public port: number
-    constructor(port: number, midelContorler:express.Router  ,app?: Application) {
+    constructor(port: number, midelContorler:Router  ,app?: Application) {
         this.app = (!app) ? express() : app
         
         this.app.use('/',midelContorler)
@@ -45,9 +43,9 @@ class App {
 
 
 class MidelContorler  {
-    public router:express.Router;
+    public router:Router;
     constructor(){
-        this.router=express.Router()
+        this.router=Router()
         this.rutas();
     } 
 
@@ -191,7 +189,7 @@ app.use(urlencoded());
 
 
 var port =8080
-var portServer=80
+var portServer=port
 var router=new MidelContorler().router
 var aplication=new App(portServer,router,app)
 aplication.listen()
