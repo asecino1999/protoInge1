@@ -3,6 +3,7 @@ exports.__esModule = true;
 var express = require("express");
 var pokerequest_1 = require("./pokerequest");
 var userrequest_1 = require("./userrequest");
+var body_parser_1 = require("body-parser");
 var App = /** @class */ (function () {
     function App(port, midelContorler, app) {
         this.app = (!app) ? express() : app;
@@ -29,12 +30,14 @@ var MidelContorler = /** @class */ (function () {
     MidelContorler.prototype.searchUserById = function (id) {
         // buscar User 
         // ejemplo de lo que debe retornar  user 
-        return { userid: 1, username: "user", totalPoints: 1, pokedex: [], retodex: [] };
+        return { userid: 1, username: "user", totalPoints: 1, pokedex: [{ name: "pika", quatity: 5 }], retodex: [] };
     };
     MidelContorler.prototype.searchRoundPokemon = function (x, y) {
         // buscar o generar los pokemon cercanos a x , y 
         // enviar respiesta 
-        return { nearest: [] };
+        return { nearest: [
+                { pokemonID: 1, name: "", points: 1, time: 2000, position: { x: 1, y: 2 }, question: "", answer: "" }
+            ] };
     };
     MidelContorler.prototype.rutas = function () {
         var _this = this;
@@ -59,7 +62,74 @@ var MidelContorler = /** @class */ (function () {
             var nearst = _this.searchRoundPokemon(x, y);
             res.json(nearst);
         });
+        this.router.post('/createEmpresa', function (req, res) {
+            var nombre = req.body.nombre;
+            var password = req.body.password;
+            var empresa = req.body.empresa;
+            // guardar user admin y empresa 
+            res.json({});
+        });
+        this.router.post('/createEmpresa', function (req, res) {
+            var nombre = req.body.nombre;
+            var password = req.body.password;
+            var empresa = req.body.empresa;
+            // guardar usaer 
+            res.json({});
+        });
+        this.router.post('/loginAdmin', function (req, res) {
+            var nombre = req.body.nombre;
+            var password = req.body.password;
+            // verificar datos 
+            res.json({
+                status: "ok",
+                token: "123"
+            });
+        });
+        this.router.post('/loginUser', function (req, res) {
+            var nombre = req.body.nombre;
+            var password = req.body.password;
+            // verificar datos 
+            // obtener datos del usar 
+            var id = 1;
+            var user = _this.searchUserById(id);
+            res.json({
+                status: "ok",
+                token: "123",
+                user: user
+            });
+        });
+        this.router.post('/capture', function (req, res) {
+            var nombre = req.body.nombre;
+            // posibilidades 
+            var password = req.body.password;
+            var token = req.body.token;
+            var respuesta = req.body.token;
+            // verificar datos y  respuesta
+            // obtener datos del usar 
+            var id = 1;
+            var user = _this.searchUserById(id);
+            res.json({
+                status: "ok",
+                resultado: true,
+                user: user
+            });
+        });
+        this.router.post('/getPokemon', function (req, res) {
+            var position = req.body.position;
+            // buscar poquemones alrededor 
+            var round = _this.searchRoundPokemon(position.x, position.y);
+            res.json(round);
+        });
     };
     return MidelContorler;
 }());
-(new App(8080, new MidelContorler().router)).listen();
+var app = express();
+app.use(body_parser_1.json());
+app.use(body_parser_1.raw());
+app.use(body_parser_1.text());
+app.use(body_parser_1.urlencoded());
+var port = 8080;
+var router = new MidelContorler().router;
+var aplication = new App(port, router, app);
+aplication.listen();
+//(new App(8080, new MidelContorler().router,app)).listen()

@@ -1,0 +1,293 @@
+---
+title: "Definicon de la api"
+author: "Gerald Palomino Monge"
+date: "4 de diciembre de 2019"
+output: pdf_document
+---
+
+Este escrito es provisional y podrá cambiar en función a las sugerencias de los otros grupos , tiene por intención informar el funcionamiento de la api backend 
+
+#### Usiarios Definidos hasta el moenot 
+
+### Administrado de empresa : 
+
+creado cuando se registra una empresa en la aplicación 
+Debe poder acceder a los datos de los empleados 
+
+### Trabajador de la empresa : 
+
+se puede registrar como miembro de una empresa , podra Jugar 
+
+#### operaciones 
+  
+### Crear cuenta 
+## Adminstrador de empresa 
+Debe proporcionar información de la empresa y de el mismo 
+json prob 
+
+ruta : domino/createEmpresa 
+
+# Envia         
+```js
+{
+nombre : "cadena nombre del uasrio ",
+pasword  : "cadena password  ",
+Empresa : "Nombre de empresa "
+}
+
+```
+# Resive 
+```js
+{
+// falta definir 
+}
+
+```
+
+## Trabajador 
+Se debe insertar la información en las base de datos 
+ruta : domino/createUser
+
+# Envia 
+```js
+{
+nombre : "cadena nombre del uasrio ",
+pasword  : "cadena password  ",
+Empresa : "Nombre de empresa "
+}
+
+```
+# resive 
+```js
+{
+// falta definir 
+
+}
+
+```
+
+### logearse
+
+iniciar sesión 
+
+## Administrador 
+ruta : domino/loginAdmin
+
+# Envia 
+```js
+{
+nombre : "cadena nombre del uasrio ",
+pasword  : "cadena password  ",
+}
+```
+# Resive 
+```js
+{
+// pendiente definir 
+// sugenrecia 
+status : "cadena o bolena confirmar datos correctos  "
+token : "cadena token gnerado , o vacio si hay error "
+
+}
+```
+
+## Trabajador 
+
+ruta : domino/loginUser
+
+# envia 
+```js
+{
+nombre : "cadena nombre del uasrio ",
+pasword  : "cadena password  ",
+}
+```
+# Resive 
+
+```js
+{
+  // datos adicionales sigeridos 
+  status : "cadena o bolena confirmar datos correctos  "
+  token : "cadena token gnerado , o vacio junto todo lo demas  si hay error "
+
+
+	userid: "numero de id ",
+	username: "Nombre completo de usuario ",
+	totalPoints: "numero de punots",
+	
+	passowrd:"cadena pasword del usario ",// seria recomedable no enviar este dato y conformar el ogueo con un toke tmeporal 
+	
+	
+	pokedex:
+	// lista de pokemoenes vector 
+		[
+			{
+				name: "nombre del pokemon 1",
+				quantity: "numero , de pokemones con el mismo tipo  y/o nombre ",
+			},
+			{
+				name: "nombre del pokemon 2",
+				quantity: "numero , de pokemones con el mismo tipo  y/o nombre",
+			}
+		],
+	retodex:// lista de retos pendientes 
+		[
+			{
+				question: "cadena , pregutna ",
+				answer: "cadena , respuesta ",
+				// esto tal vez no deberia estar 
+				// el usuario deberia poder enviarla 
+				//el server deberia confrimar si la respuesta es correcta o falsa
+				quantity: "numero , puntaje ",
+				
+				last_seen: "cadena fecha ",
+			},
+			{
+				question: "cadena , pregutna ",
+				answer: "cadena , respuesta ",
+				// esto tal vez no deberia estar 
+				// el usuario deberia poder enviarla 
+				//el server deberia confrimar si la respuesta es correcta o falsa
+				quantity: "numero , puntaje ",
+				
+				last_seen: "cadena fecha ",
+			},
+		]
+}
+```
+
+### capturar pokemon 
+enviar la respuesta, de esta manera se puede guardar el nuevo puntaje del jugador , su pokedex y su rotedex 
+
+
+ruta : domino/Capture 
+
+## solo  tabajador 
+
+# Envia 
+```js 
+{
+// sugernecia 
+  token : "cadena token user",
+  id : "numero  o cadena  id del user"
+  respuesta:"cadena con la respuesta "
+}
+```
+# Resive 
+
+```js 
+{
+  resultado :"cadena o boleano  respuesta corecta o incorrecta "
+  actualUser : " json con informaion acutalizada del usario " 
+  
+  
+}
+```
+
+
+### Pokemones cercanos 
+
+ruta : domino/getpokemon
+
+## trabajador 
+
+# envia 
+
+```js 
+{
+  position:// posicion del jugador gps ? 
+			{
+				x: " numero pos x  ",
+				y: " numero pos y  ",
+			},
+}
+```
+
+# resive 
+
+
+```js 
+{
+	nearest:[{
+		pokemonID: "cadena id  del pokemon ",
+		name: "cadena nombre del pokemon ",
+		state: " cadena estado   free ",
+		// falta definir estados y cuando se modifica 
+		points: "numero , puntaje del pokeon ",
+		time: "numero segundos para que el  pokemon desaparesca  ",
+		position:// posicion del pokemon 
+			{
+				x: " numero pos x  ",
+				y: " numero pos y  ",
+			},
+		question: "cadena pregunta ",
+		answer: "cadena respuesta ",
+		// No es poco seguro incliur ola repsuta en json 
+		// eso deberia confirmase en una operacion pararte 
+	},
+	{
+		pokemonID: "cadena id  del pokemon ",
+		name: "cadena nombre del pokemon ",
+		state: " cadena estado   free ",
+		// falta definir estados y cuando se modifica 
+		points: "numero , puntaje del pokeon ",
+		time: "numero segundos para que el  pokemon desaparesca  ",
+		position:// posicion del pokemon 
+			{
+				x: " numero pos x  ",
+				y: " numero pos y  ",
+			},
+		question: "cadena pregunta ",
+		answer: "cadena respuesta ",
+		// No es poco seguro incliur ola repsuta en json 
+		// eso deberia confirmase en una operacion pararte 
+	}
+]
+}
+```
+
+### revisar estadista 
+
+## uusario admin 
+
+ruta : domino/getData 
+
+# Envia 
+
+```js 
+{// falta definir  aqui una idea 
+  token : "cadena token gnerado en el logeo "
+  datos : {}
+}
+```
+
+# resive 
+
+```js 
+{// falta definir  aqui una idea 
+}
+```
+
+
+
+### Soportar fallo 
+## todos  
+Recomendar ser capases de soportar o verificar que no hay algún problema 
+Se capases de soportar el fallo del servidor 
+```js 
+{
+  // que todos los json tnegna un campo con status 
+  // para saber si todo funciona bien o hay algun error en la consulta o algo mas  
+  statusServer  :" cadena:  ok o  error "
+}
+```
+
+### Hosting de imagenes 
+
+Falta definir como se hará el hosting de las imágenes , o si es necesario 
+
+
+
+
+
+

@@ -1,0 +1,58 @@
+Definir operaciones 
+Usuario Empresa
+    operaciones 
+        ```js
+{
+nombre : "cadena nombre del uasrio ",
+pasword  : "cadena password  ",
+Empresa : "Nombre de empresa "
+}
+
+``` inscribirse 
+            se acede a la base datos 
+            y se crea empera 
+            se crea cuenta de admin 
+            reponde 
+                ok : mostrar cuenta de admin 
+                error
+
+Usario emplado  : movil , web ? 
+    operaciones 
+        crear su cuenta 
+            se accede a la base datos y se inser uusario 
+            respnde 
+                ok 
+                error 
+        lograerse 
+            responde veriifca cuenta 
+                responde 
+                    ok enviar token temporal 
+                    error 
+
+        capturar pokemon 
+            modifica la base datos para que usuario toenga el pokemon 
+            debe mandar token de verificacion 
+                responde 
+                    ok : 
+                    error 
+
+        reviar pokemon cercanos 
+            pregunta al a base de datos 
+                redponde 
+                    json con los pokemon 
+                    error 
+
+Usuario Admin
+    operaciones 
+
+    logearse 
+        responde veriifca cuenta 
+                responde 
+                    ok 
+                    error 
+
+     revisar estadisiticas 
+        repsonde 
+            ok :con un json con datos del usario 
+            error : 
+
