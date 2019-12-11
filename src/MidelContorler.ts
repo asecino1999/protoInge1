@@ -5,6 +5,7 @@ import { User } from './user'
 import { Pokemon, pokeRound } from './pokemon'
 import { Application, Router } from 'express';
 import { Database } from './Database';
+import { isUndefined } from 'util';
 
 class MidelContorler {
     public router: Router;
@@ -65,17 +66,24 @@ class MidelContorler {
         })
         
         this.router.post('/createEmpresa', (req, res) => {
-            var nombre: string = req.body.nombre;
+            var username: string = req.body.username;
             var password: string = req.body.password;
             var empresa: string = req.body.empresa;
             var rango:number[]=req.body.rango;
+            if( isUndefined(  username) || isUndefined( password) || isUndefined(empresa)|| isUndefined( rango)){
+                console.log("error no params ")
+                res.json({status:"err"})
+            }
+            console.log(username,password,!isUndefined(empresa),rango)
             // guardar compania 
             this.database.setCompany()
             // guardar usaer 
             this.database.setUserAdmin()
             // obtener 
             this.database.getUserAdmin()
-            res.json({})
+            res.json({
+                status:"ok"
+            })
         })
         this.router.post('/loginAdmin', (req, res) => {
             var nombre: string = req.body.nombre

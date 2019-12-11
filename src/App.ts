@@ -1,11 +1,14 @@
 import express from 'express';
 import { Application, Router } from 'express';
 
+import cors from 'cors';
+//import poke from './pokerequest';
+//import user from './userrequest'
+//import { User } from './user'
+//import { Pokemon, pokeRound } from './pokemon'
 
-import poke from './pokerequest';
-import user from './userrequest'
-import { User } from './user'
-import { Pokemon, pokeRound } from './pokemon'
+
+
 
 import {
     json,
@@ -56,7 +59,7 @@ app.use(json());
 app.use(raw());
 app.use(text());
 app.use(urlencoded());
-
+app.use(cors())
 
 //var port =8080
 //var portServer=port
