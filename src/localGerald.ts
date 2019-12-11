@@ -1,9 +1,8 @@
 // esto esta hewcho para correr en una computadora local sin sudo 
 import { App,app} from './App';
 import { MidelContorler } from './MidelContorler';
-// en servidor corre con puerto  80 , con sudo 
 
-var port = 80; 
+var port = 8080; 
 
 var aplicacion=new App()
 var router=new MidelContorler()
