@@ -9,31 +9,38 @@ var conection = createConnection({
 })
 conection.connect()
 class Database {
-    getIDEmpresaByName(name:string):number{
-        var ret:number=-1;
-        conection.query('select id from empresa as e where e.nombreEmpresa="'+name+'"',(err,res)=>{
-            console.log(res,res)
-            ret=res
-        })
-        return ret
+    setUser(nombre:string,apellido:string,username:string,password:string,puntaje:Number,nivel:Number,id_empresa:Number) {
+             
+	conection.query('insert into usuarios (nombre,apellido,username,password,puntaje,nivel,id_empresa) values ("'+nombre+'","'+apellido+'","'+username+'","'+password+'","'+puntaje+'","'+nivel+'","'+id_empresa+'") ')
+    
     }
-
-
-    setUser(nombre:string,apellido:string,username:string,password:string) {
-        conection.query('',(err,res)=>{
-
-        })
-    }
-    setUserAdmin(nombre:string,apellido:string,username:string,password:string) {
+    setUserAdmin(nombre:string,apellido:string,username:string,password:string,puntaje:Number,nivel:Number,id_empresa:Number) {
+        var tipo:string = "administrador"
         
+	conection.query('insert into usuarios (nombre,apellido,username,password,puntaje,nivel,id_empresa) values ("'+nombre+'","'+apellido+'","'+username+'","'+password+'","'+puntaje+'","'+nivel+'","'+id_empresa+'") ')
     }
+
+    setEmpresa(nombreEmpresa:String){
+        conection.query('insert into empresa (nombreEmpresa) values ("'+nombreEmpresa+'")')
+    }
+
+    setPokedex(id_pokemon:number,id_usuario:number,id_pregunta:number){
+        conection.query('insert into pokedex (id_pokemon,id_usuario,id_pregunta) values ("'+id_pokemon+'","'+id_usuario+'","'+id_pregunta+'")')
+    }
+
+
+    setRetodex(id_pregunta:number,id_usuario:number,fecha_visto:Date){
+        conection.query('insert into pokedex (id_pregunta,id_usuario,fecha_visto) values ("'+id_pregunta+'","'+id_usuario+'","'+fecha_visto+'")')
+    }
+
+
     setNewPokemonPosition() {
 
     }
     setCompany(nombre :string) {
         //var consulta = 
         
-        conection.query('insert into empresa (nombreEmpresa ) values ( "'+nombre+'");', (err, res) => {
+        conection.query(' insert into empresa (nombreEmpresa ) values ( "'+nombre+'");', (err, res) => {
             console.log(res)
         })
 
@@ -49,7 +56,7 @@ class Database {
     getPokemonRound() {
 
     }
-    getUser() {
+    getUser() { 
 
     }
     getUserAdmin() {
@@ -61,5 +68,5 @@ class Database {
 
 
 }
-console.log(new Database().getIDEmpresaByName("emp"))
 export { Database }
+ 
