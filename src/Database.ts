@@ -9,6 +9,7 @@ var conection = createConnection({
 })
 conection.connect()
 class Database {
+
     setUser(nombre:string,apellido:string,username:string,password:string,puntaje:Number,nivel:Number,id_empresa:Number) {
              
 	conection.query('insert into usuarios (nombre,apellido,username,password,puntaje,nivel,id_empresa) values ("'+nombre+'","'+apellido+'","'+username+'","'+password+'","'+puntaje+'","'+nivel+'","'+id_empresa+'") ')
@@ -26,6 +27,7 @@ class Database {
 
     setPokedex(id_pokemon:number,id_usuario:number,id_pregunta:number){
         conection.query('insert into pokedex (id_pokemon,id_usuario,id_pregunta) values ("'+id_pokemon+'","'+id_usuario+'","'+id_pregunta+'")')
+
     }
 
 
@@ -56,17 +58,33 @@ class Database {
     getPokemonRound() {
 
     }
-    getUser() { 
+
+    getUser(id:number) {
+      conection.query('select * from usuarios;', (err, res) => {
+        console.log(res)
+      })
+
+      conection.query('select * from pokedex, usuarios where id_usuario.pokedex = id.usuarios;', (err, res) => {
+        console.log(res)
+      })
+
+      conection.query('select * from retodex, usuarios where id_usuario.retodex = id.usuarios;', (err, res) => {
+        console.log(res)
+      })
 
     }
     getUserAdmin() {
-
+      
     }
-    getAnswer() {
-
+    getAnswer(id:number) {
+      //necesitar el id de latabla pregunta
+      conection.query('select id from pregunta;', (err, res) => {
+        console.log(res)
+      })
     }
 
 
 }
+
 export { Database }
- 
+
