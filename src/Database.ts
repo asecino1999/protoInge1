@@ -9,31 +9,55 @@ var conection = createConnection({
 })
 conection.connect()
 class Database {
-    getIDEmpresaByName(name:string):number{
-        var ret:number=-1;
-        conection.query('select id from empresa as e where e.nombreEmpresa="'+name+'"',(err,res)=>{
-            console.log(res,res)
-            ret=res
+    getIDEmpresaByName(name: string): Promise<{}> {
+
+        return new Promise((resolve, reject) => {
+
+            conection.query('select id from empresa as e where e.nombreEmpresa="' + name + '"', (err, res) => {
+                //console.log(res, res)
+                if (err) reject();
+                resolve(res)
+            })
         })
-        return ret
+
+
     }
 
 
-    setUser(nombre:string,apellido:string,username:string,password:string) {
-        conection.query('',(err,res)=>{
+    setUser(nombre: string, apellido: string, username: string, password: string, empresa: string): Promise<{}> {
+
+        return new Promise((resolve, reject) => {
+            var idReq = this.getIDEmpresaByName(empresa)
+            idReq
+                .then((out) => {
+                    console.log(out)
+                    // insert into usuarios (nombre,apellidos,password,puntaje,nivel,id_empresa , userName,token,tipo ) values ( "s","s2","3",0,0,0,"q","123","normal");
+
+                    
+                    resolve()
+
+
+                    //conection.query('', (err, res) => {
+
+                    //})
+                })
+
 
         })
+
+
+
     }
-    setUserAdmin(nombre:string,apellido:string,username:string,password:string) {
-        
+    setUserAdmin(nombre: string, apellido: string, username: string, password: string) {
+
     }
     setNewPokemonPosition() {
 
     }
-    setCompany(nombre :string) {
+    setCompany(nombre: string) {
         //var consulta = 
-        
-        conection.query('insert into empresa (nombreEmpresa ) values ( "'+nombre+'");', (err, res) => {
+
+        conection.query('insert into empresa (nombreEmpresa ) values ( "' + nombre + '");', (err, res) => {
             console.log(res)
         })
 
@@ -61,5 +85,5 @@ class Database {
 
 
 }
-console.log(new Database().getIDEmpresaByName("emp"))
+new Database().setUser('nombre', 'apellido', 'username', 'password', 'empresa')
 export { Database }

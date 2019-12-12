@@ -94,7 +94,7 @@ class MidelContorler {
                 res.json({ status: "err" })
             } else {
                 // guardar usuario 
-                this.database.setUser(nombre,apellido,username,password)
+                this.database.setUser(nombre,apellido,username,password,empresa)
 
 
                 res.json({ status: "ok" })
