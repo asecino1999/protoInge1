@@ -9,8 +9,20 @@ var conection = createConnection({
 })
 conection.connect()
 class Database {
-    setUser() {
+    getIDEmpresaByName(name:string):number{
+        var ret:number=-1;
+        conection.query('select id from empresa as e where e.nombreEmpresa="'+name+'"',(err,res)=>{
+            console.log(res,res)
+            ret=res
+        })
+        return ret
+    }
 
+
+    setUser(nombre:string,apellido:string,username:string,password:string) {
+        conection.query('',(err,res)=>{
+
+        })
     }
     setUserAdmin(nombre:string,apellido:string,username:string,password:string) {
         
@@ -21,7 +33,7 @@ class Database {
     setCompany(nombre :string) {
         //var consulta = 
         
-        conection.query(' insert into empresa (nombreEmpresa ) values ( "'+nombre+'");', (err, res) => {
+        conection.query('insert into empresa (nombreEmpresa ) values ( "'+nombre+'");', (err, res) => {
             console.log(res)
         })
 
@@ -49,4 +61,5 @@ class Database {
 
 
 }
+console.log(new Database().getIDEmpresaByName("emp"))
 export { Database }

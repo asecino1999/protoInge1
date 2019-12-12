@@ -127,7 +127,8 @@ CREATE TABLE `usuarios` (
   `id_empresa` int(11) NOT NULL,
   `userName` varchar(50) NOT NULL,
   `token` varchar(50) NOT NULL,
-  `tipo` varchar(50) NOT NULL
+  `tipo` varchar(50) NOT NULL,
+  `urlFoto` varchar(200) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
