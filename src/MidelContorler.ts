@@ -63,7 +63,7 @@ class MidelContorler {
 
         // retorna datos del uusario 
         this.router.get('/userid/:id', (req, res) => {
-            
+
             var id = parseInt(req.params.id, 10)
             var user: User = this.searchUserById(id)
             res.json(user)
@@ -73,28 +73,28 @@ class MidelContorler {
             var x: number = parseInt(req.params.x)
             var y: number = parseInt(req.params.y)
             var nearst: pokeRound = this.searchRoundPokemon(x, y)
-            
+
             res.json(nearst)
         })
-        this.router.post('/createUser',(req,res,next)=>{
-            var username:string=req.body.username;
-            var password:string=req.body.password;
-            var empresa:string=req.body.empresa;
-            var nombre:string=req.body.nombre;
-            var apellido:string=req.body.apellido;
+        this.router.post('/createUser', (req, res, next) => {
+            var username: string = req.body.username;
+            var password: string = req.body.password;
+            var empresa: string = req.body.empresa;
+            var nombre: string = req.body.nombre;
+            var apellido: string = req.body.apellido;
             //console.log(username)
-            var un=isUndefined(username)||isUndefined(password)|| isUndefined(empresa)|| isUndefined(nombre)|| isUndefined(apellido)
-            var vacio=()=>username===""||password==="" || empresa==="" || apellido==="" || nombre ===""
+            var un = isUndefined(username) || isUndefined(password) || isUndefined(empresa) || isUndefined(nombre) || isUndefined(apellido)
+            var vacio = () => username === "" || password === "" || empresa === "" || apellido === "" || nombre === ""
             //console.log(vacio())
-            if(un || vacio()){
+            if (un || vacio()) {
                 console.log("error ")
-                res.json({status:"err"})
-            }else{
+                res.json({ status: "err" })
+            } else {
                 // guardar usuario 
                 this.database.setUser()
-                
 
-                res.json({status:"ok"})
+
+                res.json({ status: "ok" })
             }
 
         })
@@ -102,22 +102,22 @@ class MidelContorler {
             var username: string = req.body.username;
             var password: string = req.body.password;
             var empresa: string = req.body.empresa;
-            var nombre:string=req.body.nombre;
-            var apellido:string=req.body.apellido;
+            var nombre: string = req.body.nombre;
+            var apellido: string = req.body.apellido;
 
             var rango: number[] = req.body.rango;
-            var un = isUndefined(username) || isUndefined(password) || isUndefined(empresa) || isUndefined(rango) || isUndefined(nombre)|| isUndefined(apellido)
-            var vacio =()=> (username === "" || password === "" || empresa === "" || rango.length == 0 || apellido==="" || nombre ==="")
+            var un = isUndefined(username) || isUndefined(password) || isUndefined(empresa) || isUndefined(rango) || isUndefined(nombre) || isUndefined(apellido)
+            var vacio = () => (username === "" || password === "" || empresa === "" || rango.length == 0 || apellido === "" || nombre === "")
             if (un || vacio()) {
                 console.log("error no params ")
                 res.json({ status: "err" })
-                
+
             } else {
-                console.log(username, password,empresa, rango)
+                console.log(username, password, empresa, rango)
                 // guardar compania 
                 this.database.setCompany(empresa)
                 // guardar usaer 
-                this.database.setUserAdmin(nombre,apellido,username,password)
+                this.database.setUserAdmin(nombre, apellido, username, password)
                 // obtener 
                 this.database.getUserAdmin()
                 res.json({
@@ -190,7 +190,19 @@ class MidelContorler {
                 {}
             )
         })
-
+        this.router.post('/getRanking', (req, res) => {
+            var empresa = req.body.empresa;
+            res.json({
+                jugador: [{
+                    urlImage: "url de la imagen que se genero por defecto",
+                    nombre: "nombre del jugador",
+                    puntaje: "puntaje del jugador"
+                }, { 
+                    urlImage: "url de la imagen que se genero por defecto",
+                    nombre: "nombre del jugador", 
+                    puntaje: "puntaje del jugador" }
+            })
+        })
 
 
 
