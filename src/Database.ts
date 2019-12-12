@@ -9,23 +9,13 @@ var conection = createConnection({
 })
 conection.connect()
 class Database {
-    getIDEmpresaByName(name:string):number{
-        var ret:number=-1;
-        conection.query('select id from empresa as e where e.nombreEmpresa="'+name+'"',(err,res)=>{
-            console.log(res,res)
-            ret=res
-        })
-        return ret
+    setUser() {
+
     }
-
-
-    setUser(nombre:string,apellido:string,username:string,password:string) {
-        conection.query('',(err,res)=>{
-
-        })
-    }
-    setUserAdmin(nombre:string,apellido:string,username:string,password:string) {
+    setUserAdmin(nombre:string,apellido:string,username:string,password:string,puntaje:Number,nivel:Number,id_empresa:Number,) {
+        var tipo:string = "administrador"
         
+	conection.query('insert into usuarios (nombre,apellido,username,password,puntaje,nivel,id_empresa) values ("'+nombre+'","'+apellido+'","'+username+'","'+password+'","'+puntaje+'","'+nivel+'","'+id_empresa+'") ')
     }
     setNewPokemonPosition() {
 
@@ -33,7 +23,7 @@ class Database {
     setCompany(nombre :string) {
         //var consulta = 
         
-        conection.query('insert into empresa (nombreEmpresa ) values ( "'+nombre+'");', (err, res) => {
+        conection.query(' insert into empresa (nombreEmpresa ) values ( "'+nombre+'");', (err, res) => {
             console.log(res)
         })
 
@@ -49,7 +39,7 @@ class Database {
     getPokemonRound() {
 
     }
-    getUser() {
+    getUser() { 
 
     }
     getUserAdmin() {
@@ -61,5 +51,5 @@ class Database {
 
 
 }
-console.log(new Database().getIDEmpresaByName("emp"))
 export { Database }
+ 
