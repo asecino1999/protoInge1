@@ -25,9 +25,7 @@ class App {
         this.app = null
         this.port = 8080;
     }
-    ActualizarMapa() {
-        // definir nuevas posion de los poquemones 
-    }
+    
     setPort(port: number) {
         this.port = port
     }
@@ -41,7 +39,7 @@ class App {
     public listen() {
         
         if (this.app !== null){
-            //setInterval(this.ActualizarMapa,1000*60*60*24)// se actualiza el mapa cada 24 horas 
+            
             this.app.listen(this.port, () => {
                 console.log("listening http://localhost:" + this.port);
             })

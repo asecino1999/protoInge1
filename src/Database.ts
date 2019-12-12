@@ -1,48 +1,52 @@
 
 
-import {createConnection} from 'mysql';
-var conection=createConnection({
-    host:'localhost',
-    user:'user',
-    password:'password',
-    database:'pokeuni'
+import { createConnection } from 'mysql';
+var conection = createConnection({
+    host: 'localhost',
+    user: 'user',
+    password: 'password',
+    database: 'pokeuni'
 })
 conection.connect()
-conection.query("show tables",(err,res)=>{
-    console.log(res)
-})
-
-
-conection.end()
-class Database{
-    setUser(){
+class Database {
+    setUser() {
 
     }
-    setUserAdmin(){
+    setUserAdmin(nombre:string,apellido:string,username:string,password:string) {
+        
+    }
+    setNewPokemonPosition() {
 
     }
-    setNewPokemonPosition(){
+    setCompany(nombre :string) {
+        //var consulta = 
+        
+        conection.query(' insert into empresa (nombreEmpresa ) values ( "'+nombre+'");', (err, res) => {
+            console.log(res)
+        })
+
+        conection.query(' select * from empresa ', (err, res) => {
+            console.log(res)
+        })
+
+        //conection.end()
+    }
+    setCapture() {
 
     }
-    setCompany(){
+    getPokemonRound() {
 
     }
-    setCapture(){
+    getUser() {
 
     }
-    getPokemonRound(){
+    getUserAdmin() {
 
     }
-    getUser(){
+    getAnswer() {
 
     }
-    getUserAdmin(){
 
-    }
-    getAnswer(){
-
-    }
-    
 
 }
-export {Database}
+export { Database }

@@ -14,7 +14,18 @@ class MidelContorler {
         this.router = Router()
         this.rutas();
         this.database = new Database()
+
+        //setInterval(this.ActualizarMapa,1000*60*60*24)// se actualiza el mapa cada 24 horas 
     }
+    ActualizarMapa() {
+        // definir nuevas posion de los poquemones 
+        // obtener lista de empresa junto con su rango 
+        // para cada empresa calcular 50 valores aleatorios 
+
+
+    }
+
+
     setdatabase(database: Database) {
         this.database = database
     }
@@ -52,6 +63,7 @@ class MidelContorler {
 
         // retorna datos del uusario 
         this.router.get('/userid/:id', (req, res) => {
+            
             var id = parseInt(req.params.id, 10)
             var user: User = this.searchUserById(id)
             res.json(user)
@@ -61,29 +73,58 @@ class MidelContorler {
             var x: number = parseInt(req.params.x)
             var y: number = parseInt(req.params.y)
             var nearst: pokeRound = this.searchRoundPokemon(x, y)
-
+            
             res.json(nearst)
         })
-        
-        this.router.post('/createEmpresa', (req, res) => {
+        this.router.post('/createUser',(req,res,next)=>{
+            var username:string=req.body.username;
+            var password:string=req.body.password;
+            var empresa:string=req.body.empresa;
+            var nombre:string=req.body.nombre;
+            var apellido:string=req.body.apellido;
+            //console.log(username)
+            var un=isUndefined(username)||isUndefined(password)|| isUndefined(empresa)|| isUndefined(nombre)|| isUndefined(apellido)
+            var vacio=()=>username===""||password==="" || empresa==="" || apellido==="" || nombre ===""
+            //console.log(vacio())
+            if(un || vacio()){
+                console.log("error ")
+                res.json({status:"err"})
+            }else{
+                // guardar usuario 
+                this.database.setUser()
+                
+
+                res.json({status:"ok"})
+            }
+
+        })
+        this.router.post('/createEmpresa', (req, res, next) => {
             var username: string = req.body.username;
             var password: string = req.body.password;
             var empresa: string = req.body.empresa;
-            var rango:number[]=req.body.rango;
-            if( isUndefined(  username) || isUndefined( password) || isUndefined(empresa)|| isUndefined( rango)){
+            var nombre:string=req.body.nombre;
+            var apellido:string=req.body.apellido;
+
+            var rango: number[] = req.body.rango;
+            var un = isUndefined(username) || isUndefined(password) || isUndefined(empresa) || isUndefined(rango) || isUndefined(nombre)|| isUndefined(apellido)
+            var vacio =()=> (username === "" || password === "" || empresa === "" || rango.length == 0 || apellido==="" || nombre ==="")
+            if (un || vacio()) {
                 console.log("error no params ")
-                res.json({status:"err"})
+                res.json({ status: "err" })
+                
+            } else {
+                console.log(username, password,empresa, rango)
+                // guardar compania 
+                this.database.setCompany(empresa)
+                // guardar usaer 
+                this.database.setUserAdmin(nombre,apellido,username,password)
+                // obtener 
+                this.database.getUserAdmin()
+                res.json({
+
+                    status: "ok"
+                })
             }
-            console.log(username,password,!isUndefined(empresa),rango)
-            // guardar compania 
-            this.database.setCompany()
-            // guardar usaer 
-            this.database.setUserAdmin()
-            // obtener 
-            this.database.getUserAdmin()
-            res.json({
-                status:"ok"
-            })
         })
         this.router.post('/loginAdmin', (req, res) => {
             var nombre: string = req.body.nombre
