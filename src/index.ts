@@ -9,5 +9,6 @@ var aplicacion=new App()
 var router=new MidelContorler()
 
 aplicacion.setApp(app)
+aplicacion.setPort(port)
 aplicacion.setRouter(router.router)
 aplicacion.listen()
