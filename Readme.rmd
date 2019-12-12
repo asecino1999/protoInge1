@@ -16,7 +16,7 @@ Debe poder acceder a los datos de los empleados
 
 ### Trabajador de la empresa : 
 
-se puede registrar como miembro de una empresa , podra Jugar 
+se puede registrar como miembro de una empresa , podrá Jugar 
 
 #### operaciones 
   
@@ -39,6 +39,7 @@ Empresa : "Nombre de empresa "
 # Resive 
 ```js
 {
+status:'ok'
 // falta definir 
 }
 
@@ -47,7 +48,6 @@ Empresa : "Nombre de empresa "
 ## Trabajador 
 Se debe insertar la información en las base de datos 
 ruta : domino/createUser
-
 # Envia 
 ```js
 {
@@ -60,6 +60,7 @@ Empresa : "Nombre de empresa "
 # resive 
 ```js
 {
+status:'ok'
 // falta definir 
 
 }
@@ -85,8 +86,11 @@ pasword  : "cadena password  ",
 {
 // pendiente definir 
 // sugenrecia 
-status : "cadena o bolena confirmar datos correctos  "
-token : "cadena token gnerado , o vacio si hay error "
+status : "cadena o bolena confirmar datos correctos (ok) o (err)  ",
+data:{
+token : "cadena token gnerado , o vacio si hay error ",
+Empresa: "Empresa a que pertence",
+}
 
 }
 ```
@@ -107,15 +111,15 @@ pasword  : "cadena password  ",
 ```js
 {
   // datos adicionales sigeridos 
-  status : "cadena o bolena confirmar datos correctos  "
+  status : "cadena o bolena confirmar datos correctos  ",
+  data:{
   token : "cadena token gnerado , o vacio junto todo lo demas  si hay error "
-
+  urlImagen : "url de la imagen con que se registro por defecto"
 
 	userid: "numero de id ",
 	username: "Nombre completo de usuario ",
+	Empresa : "Empresa a la que pertenece",
 	totalPoints: "numero de punots",
-	
-	passowrd:"cadena pasword del usario ",// seria recomedable no enviar este dato y conformar el ogueo con un toke tmeporal 
 	
 	
 	pokedex:
@@ -153,11 +157,12 @@ pasword  : "cadena password  ",
 				last_seen: "cadena fecha ",
 			},
 		]
+		}
 }
 ```
 
 ### capturar pokemon 
-enviar la respuesta, de esta manera se puede guardar el nuevo puntaje del jugador , su pokedex y su rotedex 
+enviar la respuesta, de esta manera se puede guardar el nuevo puntage del jugador , su pokedex y su rotedex 
 
 
 ruta : domino/Capture 
@@ -177,8 +182,11 @@ ruta : domino/Capture
 
 ```js 
 {
+  status:"ok o err",
+  data:{
   resultado :"cadena o boleano  respuesta corecta o incorrecta "
   actualUser : " json con informaion acutalizada del usario " 
+  }
   
   
 }
@@ -207,42 +215,45 @@ ruta : domino/getpokemon
 
 
 ```js 
-{
-	nearest:[{
-		pokemonID: "cadena id  del pokemon ",
-		name: "cadena nombre del pokemon ",
-		state: " cadena estado   free ",
-		// falta definir estados y cuando se modifica 
-		points: "numero , puntaje del pokeon ",
-		time: "numero segundos para que el  pokemon desaparesca  ",
-		position:// posicion del pokemon 
-			{
-				x: " numero pos x  ",
-				y: " numero pos y  ",
-			},
-		question: "cadena pregunta ",
-		answer: "cadena respuesta ",
-		// No es poco seguro incliur ola repsuta en json 
-		// eso deberia confirmase en una operacion pararte 
-	},
-	{
-		pokemonID: "cadena id  del pokemon ",
-		name: "cadena nombre del pokemon ",
-		state: " cadena estado   free ",
-		// falta definir estados y cuando se modifica 
-		points: "numero , puntaje del pokeon ",
-		time: "numero segundos para que el  pokemon desaparesca  ",
-		position:// posicion del pokemon 
-			{
-				x: " numero pos x  ",
-				y: " numero pos y  ",
-			},
-		question: "cadena pregunta ",
-		answer: "cadena respuesta ",
-		// No es poco seguro incliur ola repsuta en json 
-		// eso deberia confirmase en una operacion pararte 
-	}
-]
+  {
+  status:'ok o err',
+  data:{
+  	nearest:[{
+  		pokemonID: "cadena id  del pokemon ",
+  		name: "cadena nombre del pokemon ",
+  		state: " cadena estado   free ",
+  		// falta definir estados y cuando se modifica 
+  		points: "numero , puntaje del pokeon ",
+  		time: "numero segundos para que el  pokemon desaparesca  ",
+  		position:// posicion del pokemon 
+  			{
+  				x: " numero pos x  ",
+  				y: " numero pos y  ",
+  			},
+  		question: "cadena pregunta ",
+  		answer: "cadena respuesta ",
+  		// No es poco seguro incliur ola repsuta en json 
+  		// eso deberia confirmase en una operacion pararte 
+  	},
+  	{
+  		pokemonID: "cadena id  del pokemon ",
+  		name: "cadena nombre del pokemon ",
+  		state: " cadena estado   free ",
+  		// falta definir estados y cuando se modifica 
+  		points: "numero , puntaje del pokeon ",
+  		time: "numero segundos para que el  pokemon desaparesca  ",
+  		position:// posicion del pokemon 
+  			{
+  				x: " numero pos x  ",
+  				y: " numero pos y  ",
+  			},
+  		question: "cadena pregunta ",
+  		answer: "cadena respuesta ",
+  		// No es poco seguro incliur ola repsuta en json 
+  		// eso deberia confirmase en una operacion pararte 
+  	}
+  ]
+  }
 }
 ```
 
@@ -256,38 +267,64 @@ ruta : domino/getData
 
 ```js 
 {// falta definir  aqui una idea 
-  token : "cadena token gnerado en el logeo "
+  token : "cadena token gnerado en el ogeo "
   datos : {}
 }
 ```
 
-# resive 
+### revisar ranking (web) 
+
+## uusario trabajdor
+
+ruta : domino/getRanking 
+
+# Envia 
 
 ```js 
 {// falta definir  aqui una idea 
+  Empresa: "Empresa a la que perteneces"
 }
 ```
 
+# Resive 
 
+```js 
+{// Devuelve todos los jugadores de la misma empresa
+  status:"ok o err "
+  data:{
+  jugador:[{
+    urlImage : "url de la imagen que se genero por defecto"
+		nombre : "nombre del jugador",
+		puntaje : "puntaje del jugador",
+	},
+	{
+	  urlImage : "url de la imagen que se genero por defecto"
+		nombre : "nombre del jugador",
+		puntaje : "puntaje del jugador",
+	}}
+}
+```
 
 ### Soportar fallo 
 ## todos  
 Recomendar ser capases de soportar o verificar que no hay algún problema 
-Se capases de soportar el fallo del servidor 
+Se capases de soportar el fallo del servidor , 
+
+Cuando se solicite informacion deberan verificar el estatus de "ok" 
+la informacion estará guardada en el atributo data 
+si el estatus de es "err" , probablemente no se incluirá el atributo data data 
+
+
 ```js 
 {
   // que todos los json tnegna un campo con status 
   // para saber si todo funciona bien o hay algun error en la consulta o algo mas  
-  statusServer  :" cadena:  ok o  error "
+  status  :" cadena:  ok o  error "
 }
 ```
+
+
 
 ### Hosting de imagenes 
 
 Falta definir como se hará el hosting de las imágenes , o si es necesario 
-
-
-
-
-
-

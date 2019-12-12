@@ -52,13 +52,16 @@ class MidelContorler {
 
     rutas() {
         this.router.get('/poke', (req, res) => {
-            console.log(poke)
+            console.log({
+                status: 'ok',
+                data: poke
+            })
 
-            res.json(poke)
+            res.json({ status: "ok", poke: poke })
         })
         this.router.get('/user', (req, res) => {
             console.log(user)
-            res.json(user)
+            res.json({ status: "ok", data: user })
         })
 
         // retorna datos del uusario 
@@ -66,7 +69,7 @@ class MidelContorler {
 
             var id = parseInt(req.params.id, 10)
             var user: User = this.searchUserById(id)
-            res.json(user)
+            res.json({ status: 'ok', data: user })
         })
         // retorna pokemones cercanos 
         this.router.get('/pokeround/:x&:y', (req, res) => {
@@ -74,7 +77,7 @@ class MidelContorler {
             var y: number = parseInt(req.params.y)
             var nearst: pokeRound = this.searchRoundPokemon(x, y)
 
-            res.json(nearst)
+            res.json({ status: 'ok', data: nearst })
         })
         this.router.post('/createUser', (req, res, next) => {
             var username: string = req.body.username;
@@ -133,7 +136,9 @@ class MidelContorler {
             this.database.getUserAdmin()
             res.json({
                 status: "ok",
-                token: "123"
+                data: {
+                    token: "123"
+                }
             })
         })
         this.router.post('/loginUser', (req, res) => {
@@ -147,8 +152,10 @@ class MidelContorler {
 
             res.json({
                 status: "ok",
-                token: "123",
-                user: user
+                data: {
+                    token: "123",
+                    user: user
+                }
             })
         })
 
@@ -167,8 +174,10 @@ class MidelContorler {
 
             res.json({
                 status: "ok",
-                resultado: true,
-                user: user
+                data: {
+                    resultado: true,
+                    user: user
+                }
             })
         })
         this.router.post('/getPokemon', (req, res) => {
@@ -176,7 +185,7 @@ class MidelContorler {
             // buscar poquemones alrededor 
             var round: pokeRound = this.searchRoundPokemon(position.x, position.y)
             res.json(
-                round
+                { status: 'ok', data: round }
             )
         })
         this.router.post('/getData', (req, res) => {
@@ -187,20 +196,26 @@ class MidelContorler {
             // buscar poquemones alrededor 
 
             res.json(
-                {}
+                {
+                    status: 'ok'
+                }
             )
         })
         this.router.post('/getRanking', (req, res) => {
             var empresa = req.body.empresa;
             res.json({
-                jugador: [{
-                    urlImage: "url de la imagen que se genero por defecto",
-                    nombre: "nombre del jugador",
-                    puntaje: "puntaje del jugador"
-                }, { 
-                    urlImage: "url de la imagen que se genero por defecto",
-                    nombre: "nombre del jugador", 
-                    puntaje: "puntaje del jugador" }
+                status: 'ok',
+                data: {
+                    jugador: [{
+                        urlImage: "https://icon-library.net/images/user-icon-jpg/user-icon-jpg-18.jpg",
+                        nombre: "nombre del jugador",
+                        puntaje: 20
+                    }, {
+                        urlImage: "https://icon-library.net/images/user-icon-jpg/user-icon-jpg-18.jpg",
+                        nombre: "nombre del jugador",
+                        puntaje: 30
+                    }]
+                }
             })
         })
 
