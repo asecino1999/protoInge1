@@ -5,3 +5,4 @@ drop tables preguntasexternas;
 drop tables preguntasnosotros;
 drop tables retodex;
 drop tables usuarios;
+drop table captured;
