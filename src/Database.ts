@@ -9,20 +9,8 @@ var conection = createConnection({
 })
 conection.connect()
 class Database {
-    getIDEmpresaByName(name:string):number{
-        var ret:number=-1;
-        conection.query('select id from empresa as e where e.nombreEmpresa="'+name+'"',(err,res)=>{
-            console.log(res,res)
-            ret=res
-        })
-        return ret
-    }
+    setUser() {
 
-
-    setUser(nombre:string,apellido:string,username:string,password:string) {
-        conection.query('',(err,res)=>{
-
-        })
     }
     setUserAdmin(nombre:string,apellido:string,username:string,password:string) {
         
@@ -33,7 +21,7 @@ class Database {
     setCompany(nombre :string) {
         //var consulta = 
         
-        conection.query('insert into empresa (nombreEmpresa ) values ( "'+nombre+'");', (err, res) => {
+        conection.query(' insert into empresa (nombreEmpresa ) values ( "'+nombre+'");', (err, res) => {
             console.log(res)
         })
 
@@ -49,17 +37,30 @@ class Database {
     getPokemonRound() {
 
     }
-    getUser() {
+    getUser(id:number) {
+      conection.query('select * from usuarios;', (err, res) => {
+        console.log(res)
+      })
+
+      conection.query('select * from pokedex, usuarios where id_usuario.pokedex = id.usuarios;', (err, res) => {
+        console.log(res)
+      })
+
+      conection.query('select * from retodex, usuarios where id_usuario.retodex = id.usuarios;', (err, res) => {
+        console.log(res)
+      })
 
     }
     getUserAdmin() {
-
+      
     }
-    getAnswer() {
-
+    getAnswer(id:number) {
+      //necesitar el id de latabla pregunta
+      conection.query('select id from pregunta;', (err, res) => {
+        console.log(res)
+      })
     }
 
 
 }
-console.log(new Database().getIDEmpresaByName("emp"))
 export { Database }
