@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 11-12-2019 a las 18:37:47
+-- Tiempo de generación: 12-12-2019 a las 03:11:49
 -- Versión del servidor: 10.4.10-MariaDB
 -- Versión de PHP: 7.3.12
 
@@ -21,6 +21,17 @@ SET time_zone = "+00:00";
 --
 -- Base de datos: `pokeuni`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `captured`
+--
+
+CREATE TABLE `captured` (
+  `id_usuario` int(11) NOT NULL,
+  `id_pokemon` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -110,10 +121,13 @@ CREATE TABLE `usuarios` (
   `id` int(11) NOT NULL,
   `nombre` varchar(50) NOT NULL,
   `apellidos` varchar(50) NOT NULL,
+  `password` varchar(50) NOT NULL,
   `puntaje` int(11) NOT NULL,
   `nivel` int(11) NOT NULL,
   `id_empresa` int(11) NOT NULL,
-  `userName` varchar(50) NOT NULL
+  `userName` varchar(50) NOT NULL,
+  `token` varchar(50) NOT NULL,
+  `tipo` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
