@@ -9,6 +9,7 @@ var conection = createConnection({
 })
 conection.connect()
 class Database {
+
     getIDEmpresaByName(name: string): Promise<{}> {
 
         return new Promise((resolve, reject) => {
@@ -19,8 +20,19 @@ class Database {
                 resolve(res)
             })
         })
+    }
 
 
+
+    setUserAdmin(nombre: string, apellido: string, username: string, password: string, puntaje: Number, nivel: Number, id_empresa: Number) {
+        var tipo: string = "administrador"
+
+        conection.query('insert into usuarios (nombre,apellido,username,password,puntaje,nivel,id_empresa) values ("' + nombre + '","' + apellido + '","' + username + '","' + password + '","' + puntaje + '","' + nivel + '","' + id_empresa + '") ')
+
+    }
+
+    setEmpresa(nombreEmpresa: String) {
+        conection.query('insert into empresa (nombreEmpresa) values ("' + nombreEmpresa + '")')
     }
 
 
@@ -31,9 +43,10 @@ class Database {
             idReq
                 .then((out) => {
                     console.log(out)
+                    var id_empresa = out
                     // insert into usuarios (nombre,apellidos,password,puntaje,nivel,id_empresa , userName,token,tipo ) values ( "s","s2","3",0,0,0,"q","123","normal");
+                    conection.query('insert into usuarios (nombre,apellido,username,password,puntaje,nivel,id_empresa) values ("' + nombre + '","' + apellido + '","' + username + '","' + password + '","' + 0 + '","' + 0 + '","' + id_empresa + '") ')
 
-                    
                     resolve()
 
 
@@ -48,16 +61,28 @@ class Database {
 
 
     }
-    setUserAdmin(nombre: string, apellido: string, username: string, password: string) {
+
+
+    setPokedex(id_pokemon: number, id_usuario: number, id_pregunta: number) {
+        conection.query('insert into pokedex (id_pokemon,id_usuario,id_pregunta) values ("' + id_pokemon + '","' + id_usuario + '","' + id_pregunta + '")')
+    }
+
+
+    setRetodex(id_pregunta: number, id_usuario: number, fecha_visto: Date) {
+        conection.query('insert into pokedex (id_pregunta,id_usuario,fecha_visto) values ("' + id_pregunta + '","' + id_usuario + '","' + fecha_visto + '")')
 
     }
+
+
     setNewPokemonPosition() {
 
     }
     setCompany(nombre: string) {
         //var consulta = 
 
+
         conection.query('insert into empresa (nombreEmpresa ) values ( "' + nombre + '");', (err, res) => {
+
             console.log(res)
         })
 
@@ -85,5 +110,7 @@ class Database {
 
 
 }
+
 new Database().setUser('nombre', 'apellido', 'username', 'password', 'empresa')
+
 export { Database }

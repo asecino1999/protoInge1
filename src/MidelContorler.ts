@@ -120,7 +120,7 @@ class MidelContorler {
                 // guardar compania 
                 this.database.setCompany(empresa)
                 // guardar usaer 
-                this.database.setUserAdmin(nombre, apellido, username, password)
+                this.database.setUserAdmin(nombre, apellido, username, password,0,0,Math.floor(Math.random() * 100000000) + 1  )
                 // obtener 
                 this.database.getUserAdmin()
                 res.json({
