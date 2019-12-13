@@ -29,10 +29,11 @@ class MidelContorler {
     setdatabase(database: Database) {
         this.database = database
     }
-    searchUserById(id: number): User {
+    searchUserById(id: number) {
         // buscar User 
-        this.database.getUser()
+        //this.database.getUser()
 
+        //return this.database.getUserByUsername();
         // ejemplo de lo que debe retornar  user 
         return { userid: 1, username: "user", totalPoints: 1, pokedex: [{ name: "pika", quatity: 5 }], retodex: [] }
     }
@@ -94,10 +95,18 @@ class MidelContorler {
                 res.json({ status: "err" })
             } else {
                 // guardar usuario 
-                this.database.setUser(nombre,apellido,username,password,empresa)
+                this.database.setUser(nombre, apellido, username, password, empresa)
+                    .then((result) => {
+                        res.json({
+                            status: "ok",
+                            database: result
+                        })
+                    }).catch((err) => {
+
+                    });
 
 
-                res.json({ status: "ok" })
+
             }
 
         })
@@ -118,15 +127,16 @@ class MidelContorler {
             } else {
                 console.log(username, password, empresa, rango)
                 // guardar compania 
-                this.database.setCompany(empresa)
+                this.database.setEmpresa(empresa, nombre, apellido, username, password, 0, 0)
+                    .then((result) => {
+                        res.json({ status: "ok" })
+                    }).catch((err) => {
+                        res.json({ status: err })
+                    });
                 // guardar usaer 
-                this.database.setUserAdmin(nombre, apellido, username, password,0,0,Math.floor(Math.random() * 100000000) + 1  )
+                //this.database.setUserAdmin(nombre, apellido, username, password,0,0,Math.floor(Math.random() * 100000000) + 1  )
                 // obtener 
-                this.database.getUserAdmin()
-                res.json({
 
-                    status: "ok"
-                })
             }
         })
         this.router.post('/loginAdmin', (req, res) => {
@@ -142,43 +152,134 @@ class MidelContorler {
             })
         })
         this.router.post('/loginUser', (req, res) => {
-            var nombre: string = req.body.nombre
+            var userName: String = new String(req.body.username)
             var password: string = req.body.password
             // verificar datos 
 
             // obtener datos del usar 
             var id = 1
-            var user: User = this.searchUserById(id)
+            //var user: User = this.searchUserById(id)
+            this.database.getUserByUsername(userName).then((result) => {
+                res.json({
+                    status: "ok",
+                    data: {
+                        token: "123",
+                        user: result
+                    }
+                })
+            }).catch((err) => {
+                res.json({ status: err })
 
-            res.json({
-                status: "ok",
-                data: {
-                    token: "123",
-                    user: user
-                }
-            })
+            });
+
         })
-
-        this.router.post('/capture', (req, res) => {
-            var nombre: string = req.body.nombre
+        this.router.post('/ver', (req, res) => {
+            var username = new String(req.body.username)
             // posibilidades 
             var password: string = req.body.password
             var token: string = req.body.token
             var respuesta: string = req.body.answer
+            var id_pregunta: number = req.body.id_pregunta
             // verificar datos y  respuesta
             // obtener datos del usar 
-            this.database.getAnswer()
-            this.database.setCapture()
-            var id = 1
-            var user: User = this.searchUserById(id)
+            //this.database.getAnswer()
+            this.database.getUserByUsername(username)
+                .then((result: any) => {
+                    this.database.setRetodex(id_pregunta, result.user[0].id, (Number(new Date())))
+                        .then((result2) => {
+                            this.database.getUserByUsername(username).then((result2) =>
+                                res.json({
+                                    status: "ok",
+                                    data: {
+                                        user: result2
+                                    }
+                                })
+                            )
+                                .catch((err) => {
+                                    res.json({
+                                        status: err,
+                                    })
+                                });
+                        }).catch((err) => {
+                            res.json({
+                                status: err,
 
-            res.json({
-                status: "ok",
-                data: {
-                    resultado: true,
-                    user: user
-                }
-            })
+                            })
+                        });
+
+                }).catch((err) => {
+                    res.json({
+                        status: err,
+
+                    })
+                });
+
+        })
+        this.router.post('/capture', (req, res) => {
+            var username = new String(req.body.username)
+            // posibilidades 
+            var password: string = req.body.password
+            var token: string = req.body.token
+            var respuesta: string = req.body.respuesta
+            var id_pregunta: number = req.body.id_pregunta
+            // verificar datos y  respuesta
+            // obtener datos del usar 
+            //this.database.getAnswer()
+            this.database.getUserByUsername(username)
+                .then((result: any) => {
+
+                    this.database.getAnswer(id_pregunta)
+                        .then((result2) => {
+                            if (result2 instanceof Array) {
+                                var respCor = result2[0].respuesta;
+                                console.log(respCor)
+                                if (respCor === respuesta) {
+                                    console.log("inicia "+respCor+"console "+result.user[0].id)
+                                    this.database.setPokedex(id_pregunta, result.user[0].id, (Number(new Date())))
+                                        .then((result3) => {
+                                            this.database.getUserByUsername(username)
+                                                .then((result4) =>
+                                                    res.json({
+                                                        status: "ok",
+                                                        data: {
+                                                            user: result4
+                                                        }
+                                                    })
+                                                )
+                                                .catch((err) => {
+                                                    res.json({
+                                                        status: err,
+                                                    })
+                                                });
+                                        })
+                                        .catch((err) => {
+                                            res.json({
+                                                status: err,
+                                            })
+                                        });
+
+                                } else {
+                                    res.json({
+                                        status: "resp increcta "+respCor+ " "+respuesta,
+                                    })
+                                }
+                            }
+                        }).catch((err) => {
+                            res.json({
+                                status: err,
+                            })
+                        });
+
+
+
+
+                }).catch((err) => {
+                    res.json({
+                        status: err,
+
+                    })
+                });
+
         })
         this.router.post('/getPokemon', (req, res) => {
             var position = req.body.position
