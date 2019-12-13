@@ -1,6 +1,8 @@
 
 
-import { createConnection } from 'mysql';
+import { createConnection, MysqlError } from 'mysql';
+import { resolve } from 'dns';
+import { rejects } from 'assert';
 var conection = createConnection({
     host: 'localhost',
     user: 'user',
@@ -9,53 +11,92 @@ var conection = createConnection({
 })
 conection.connect()
 class Database {
+    // manejar las cpsultas 
 
-    getIDEmpresaByName(name: string): Promise<{}> {
-
+    query(consulta: string): Promise<{}> {
         return new Promise((resolve, reject) => {
-
-            conection.query('select id from empresa as e where e.nombreEmpresa="' + name + '"', (err, res) => {
-                //console.log(res, res)
-                if (err) reject();
-                resolve(res)
+            conection.query(consulta, (err, rows) => {
+                if (err) reject(err)
+                resolve(rows)
             })
         })
     }
 
 
 
-    setUserAdmin(nombre: string, apellido: string, username: string, password: string, puntaje: Number, nivel: Number, id_empresa: Number) {
-        var tipo: string = "administrador"
 
-        conection.query('insert into usuarios (nombre,apellido,username,password,puntaje,nivel,id_empresa) values ("' + nombre + '","' + apellido + '","' + username + '","' + password + '","' + puntaje + '","' + nivel + '","' + id_empresa + '") ')
+    getIDEmpresaByName(name: string): Promise<{}> {
+
+        return new Promise((resolve, reject) => {
+            var consulta = 'select id from empresa as e where e.nombreEmpresa="' + name + '"';
+            this.query(consulta)
+                .then((res) => {
+                    var id_empresa = JSON.parse(JSON.stringify(res));
+                    if (id_empresa instanceof Array && id_empresa.length > 0)
+                        resolve(id_empresa[0].id)
+                    else
+                        reject({ status: "la consulta retorno un resultado inesperado" })
+                })
+                .catch((err) => reject(err))
+        })
+    }
+
+
+
+    setUserAdmin(nombre: string, apellido: string, username: string, password: string, puntaje: Number, nivel: Number, id_empresa: Number | any): Promise<{}> {
+        var tipo: string = "administrador"
+        const valRandom = Math.floor(Math.random() * 100000000);
+        var url = "https://icon-library.net/images/user-icon-jpg/user-icon-jpg-18.jpg"
+        const consulta = 'insert into usuarios (nombre,apellidos,username,password,puntaje,nivel,id_empresa,token,tipo,urlFoto)' +
+            ' values ("' + nombre + '","' + apellido + '","' + username + '","' + password + '","' + puntaje + '","' + nivel + '","' + id_empresa + '", "' + valRandom + '","admin","' + url + '"   ); ';
+        console.log("set admin",consulta)
+        return this.query(consulta)
 
     }
 
-    setEmpresa(nombreEmpresa: String) {
-        conection.query('insert into empresa (nombreEmpresa) values ("' + nombreEmpresa + '")')
+    setEmpresa(nombreEmpresa: string, nombre: string, apellido: string, username: string, password: string, puntaje: Number, nivel: Number): Promise<{}> {
+        return new Promise((resolve, reject) => {
+            this.query('insert into empresa (nombreEmpresa) values ("' + nombreEmpresa + '")')
+                .then(
+                    (out) => this.getIDEmpresaByName(nombreEmpresa)
+                        .then((out) => this.setUserAdmin(nombre, apellido, username, password, puntaje, nivel, out)
+                            .then((out) => resolve(out))
+                            .catch((err) => reject(err))
+                        )
+                        .catch((err) => reject(err))
+
+                )
+                .catch((err) => reject(err))
+
+
+
+        })
+
+
     }
 
 
     setUser(nombre: string, apellido: string, username: string, password: string, empresa: string): Promise<{}> {
 
         return new Promise((resolve, reject) => {
-            var idReq = this.getIDEmpresaByName(empresa)
+            var idReq = this.getIDEmpresaByName(empresa) // buscar nombre de empresa 
+            //var valrandom=
+            var insertarUser = (id_empresa: any): Promise<{}> => {
+                console.log(id_empresa)
+                var url = "https://icon-library.net/images/user-icon-jpg/user-icon-jpg-18.jpg"
+                const valRandom = Math.floor(Math.random() * 100000000);
+                var consulta = 'insert into usuarios (nombre,apellidos,username,password,puntaje,nivel,id_empresa,token,tipo,urlFoto) ' +
+                    'values ("' + nombre + '","' + apellido + '","' + username + '","' + password + '",' +
+                    0 + ',' + 0 + ',' + id_empresa + ', "' + valRandom + '", "trabajador","' + url + '"   ) ;'
+                console.log(consulta)
+                return this.query(consulta)
+            }
+            //fdgd8646
             idReq
-                .then((out) => {
-                    console.log(out)
-                    var id_empresa = out
-                    // insert into usuarios (nombre,apellidos,password,puntaje,nivel,id_empresa , userName,token,tipo ) values ( "s","s2","3",0,0,0,"q","123","normal");
-                    conection.query('insert into usuarios (nombre,apellido,username,password,puntaje,nivel,id_empresa) values ("' + nombre + '","' + apellido + '","' + username + '","' + password + '","' + 0 + '","' + 0 + '","' + id_empresa + '") ')
-
-                    resolve()
-
-
-                    //conection.query('', (err, res) => {
-
-                    //})
-                })
-
-
+                .then((id_empresa: any) => insertarUser(id_empresa)
+                    .then((out) => { console.log(out); resolve(out) })
+                    .catch(err => { console.log(err); reject(err) })
+                )
         })
 
 
@@ -68,9 +109,8 @@ class Database {
     }
 
 
-    setRetodex(id_pregunta: number, id_usuario: number, fecha_visto: Date) {
-        conection.query('insert into pokedex (id_pregunta,id_usuario,fecha_visto) values ("' + id_pregunta + '","' + id_usuario + '","' + fecha_visto + '")')
-
+    setRetodex(id_pregunta: number, id_usuario: number, fecha_visto: Date): Promise<{}> {
+        return this.query('insert into pokedex (id_pregunta,id_usuario,fecha_visto) values ("' + id_pregunta + '","' + id_usuario + '","' + fecha_visto + '")')
     }
 
 
@@ -111,6 +151,9 @@ class Database {
 
 }
 
-new Database().setUser('nombre', 'apellido', 'username', 'password', 'empresa')
+var data = new Database()
+data.setEmpresa('empresa1','nombre', 'apellido', 'username', 'password',0,0).catch(()=>{})
+data.setUser('nombre', 'apellido', 'username', 'password', 'empresa').catch(() => { })
 
+ 
 export { Database }
