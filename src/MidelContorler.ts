@@ -158,8 +158,9 @@ class MidelContorler {
 
             // obtener datos del usar 
             var id = 1
+            console.log("geting user -------------------")
             //var user: User = this.searchUserById(id)
-            this.database.getUserByUsername(userName).then((result) => {
+            this.database.GetUserByUsername(userName).then((result) => {
                 res.json({
                     status: "ok",
                     data: {
@@ -173,7 +174,7 @@ class MidelContorler {
             });
 
         })
-        this.router.post('/ver', (req, res) => {
+        this.router.post('/save/retodex/pokemon', (req, res) => {// /ver -> /save/retodex/pokemon
             var username = new String(req.body.username)
             // posibilidades 
             var password: string = req.body.password
@@ -183,24 +184,29 @@ class MidelContorler {
             // verificar datos y  respuesta
             // obtener datos del usar 
             //this.database.getAnswer()
-            this.database.getUserByUsername(username)
+
+            this.database.GetUserByUsername(username)
                 .then((result: any) => {
-                    this.database.setRetodex(id_pregunta, result.user[0].id, (Number(new Date())))
+                    console.log("users",result)
+                    this.database.setRetodex(id_pregunta, result.user.id, (Number(new Date())))
                         .then((result2) => {
-                            this.database.getUserByUsername(username).then((result2) =>
+                            this.database.GetUserByUsername(username).then((result2) =>{
+                                console.log(result2)
                                 res.json({
                                     status: "ok",
                                     data: {
                                         user: result2
                                     }
-                                })
+                                })}
                             )
                                 .catch((err) => {
+                                    console.log(err)
                                     res.json({
                                         status: err,
                                     })
                                 });
                         }).catch((err) => {
+                            console.log(err)
                             res.json({
                                 status: err,
 
@@ -208,6 +214,7 @@ class MidelContorler {
                         });
 
                 }).catch((err) => {
+                    console.log(err)
                     res.json({
                         status: err,
 
@@ -225,9 +232,8 @@ class MidelContorler {
             // verificar datos y  respuesta
             // obtener datos del usar 
             //this.database.getAnswer()
-            this.database.getUserByUsername(username)
+            this.database.GetUserByUsername(username)
                 .then((result: any) => {
-
                     this.database.getAnswer(id_pregunta)
                         .then((result2) => {
                             if (result2 instanceof Array) {
@@ -237,7 +243,7 @@ class MidelContorler {
                                     console.log("inicia "+respCor+"console "+result.user[0].id)
                                     this.database.setPokedex(id_pregunta, result.user[0].id, (Number(new Date())))
                                         .then((result3) => {
-                                            this.database.getUserByUsername(username)
+                                            this.database.GetUserByUsername(username)
                                                 .then((result4) =>
                                                     res.json({
                                                         status: "ok",
@@ -257,7 +263,6 @@ class MidelContorler {
                                                 status: err,
                                             })
                                         });
-
                                 } else {
                                     res.json({
                                         status: "resp increcta "+respCor+ " "+respuesta,
@@ -269,14 +274,9 @@ class MidelContorler {
                                 status: err,
                             })
                         });
-
-
-
-
                 }).catch((err) => {
                     res.json({
                         status: err,
-
                     })
                 });
 
