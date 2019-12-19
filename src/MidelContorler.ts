@@ -6,15 +6,17 @@ import { Pokemon, pokeRound } from './pokemon'
 import { Application, Router } from 'express';
 import { Database } from './Database';
 import { isUndefined } from 'util';
+import { Handlers } from './Handlers';
 
 class MidelContorler {
     public router: Router;
-    public database: Database
+    public database: Database;
+    public handler:Handlers;
     constructor() {
         this.router = Router()
         this.rutas();
         this.database = new Database()
-
+        this.handler=new Handlers()
         //setInterval(this.ActualizarMapa,1000*60*60*24)// se actualiza el mapa cada 24 horas 
     }
     ActualizarMapa() {
@@ -39,7 +41,7 @@ class MidelContorler {
     }
     searchRoundPokemon(x: number, y: number): pokeRound {
         // buscar o generar los pokemon cercanos a x , y 
-        this.database.getPokemonRound()
+        //this.database.getPokemonRound()
         // enviar respiesta 
         return {
             nearest: [
@@ -69,17 +71,18 @@ class MidelContorler {
         this.router.get('/userid/:id', (req, res) => {
 
             var id = parseInt(req.params.id, 10)
-            var user: User = this.searchUserById(id)
-            res.json({ status: 'ok', data: user })
+            //var user: User = this.searchUserById(id)
+            res.json({ status: 'ok', data: "user no more avalibe " })
         })
         // retorna pokemones cercanos 
-        this.router.get('/pokeround/:x&:y', (req, res) => {
+        this.router.get('/pokeround/:x&:y&:empresa', (req, res) => {
             var x: number = parseInt(req.params.x)
             var y: number = parseInt(req.params.y)
-            var nearst: pokeRound = this.searchRoundPokemon(x, y)
-
-            res.json({ status: 'ok', data: nearst })
+            var empresa:string=req.params.empresa
+            console.log("routnder")
+            this.handler.GetPokemones(res,empresa)
         })
+        
         this.router.post('/createUser', (req, res, next) => {
             var username: string = req.body.username;
             var password: string = req.body.password;
@@ -95,6 +98,8 @@ class MidelContorler {
                 res.json({ status: "err" })
             } else {
                 // guardar usuario 
+                this.handler.SetUser(res,nombre, apellido, username, password, empresa)
+                /*
                 this.database.setUser(nombre, apellido, username, password, empresa)
                     .then((result) => {
                         res.json({
@@ -102,11 +107,8 @@ class MidelContorler {
                             database: result
                         })
                     }).catch((err) => {
-
-                    });
-
-
-
+                        res.json({status:err})
+                    });*/
             }
 
         })
@@ -159,7 +161,7 @@ class MidelContorler {
 
             // obtener datos del usar 
             var id = 1
-            console.log("geting user -------------------")
+            //console.log("geting user -------------------")
             //var user: User = this.searchUserById(id)
             this.database.GetUserByUsername(userName).then((result) => {
                 res.json({
@@ -176,7 +178,7 @@ class MidelContorler {
 
         })
         this.router.post('/save/retodex/pokemon', (req, res) => {// /ver -> /save/retodex/pokemon
-            var username = new String(req.body.username)
+            var username =  String(req.body.username)
             // posibilidades 
             var password: string = req.body.password
             var token: string = req.body.token
@@ -185,46 +187,11 @@ class MidelContorler {
             // verificar datos y  respuesta
             // obtener datos del usar 
             //this.database.getAnswer()
-
-            this.database.GetUserByUsername(username)
-                .then((result: any) => {
-                    console.log("users",result)
-                    this.database.setRetodex(id_pregunta, result.user.id, (Number(new Date())))
-                        .then((result2) => {
-                            this.database.GetUserByUsername(username).then((result2) =>{
-                                console.log(result2)
-                                res.json({
-                                    status: "ok",
-                                    data: {
-                                        user: result2
-                                    }
-                                })}
-                            )
-                                .catch((err) => {
-                                    console.log(err)
-                                    res.json({
-                                        status: err,
-                                    })
-                                });
-                        }).catch((err) => {
-                            console.log(err)
-                            res.json({
-                                status: err,
-
-                            })
-                        });
-
-                }).catch((err) => {
-                    console.log(err)
-                    res.json({
-                        status: err,
-
-                    })
-                });
-
+            this.handler.SetRetodex(res,username,id_pregunta)
+            
         })
         this.router.post('/capture', (req, res) => {
-            var username = new String(req.body.username)
+            var username =  String(req.body.username)
             // posibilidades 
             var password: string = req.body.password
             var token: string = req.body.token
@@ -233,6 +200,8 @@ class MidelContorler {
             // verificar datos y  respuesta
             // obtener datos del usar 
             //this.database.getAnswer()
+            this.handler.SetPokedex(res,username,id_pregunta,respuesta)
+            /*
             this.database.GetUserByUsername(username)
                 .then((result: any) => {
                     this.database.getAnswer(id_pregunta)
@@ -279,15 +248,15 @@ class MidelContorler {
                     res.json({
                         status: err,
                     })
-                });
+                });*/
 
         })
         this.router.post('/getPokemon', (req, res) => {
             var position = req.body.position
             // buscar poquemones alrededor 
-            var round: pokeRound = this.searchRoundPokemon(position.x, position.y)
+            //var round: pokeRound = this.searchRoundPokemon(position.x, position.y)
             res.json(
-                { status: 'ok', data: round }
+                { status: 'ok', data: {} }
             )
         })
         this.router.post('/getData', (req, res) => {
@@ -305,6 +274,10 @@ class MidelContorler {
         })
         this.router.post('/getRanking', (req, res) => {
             var empresa = req.body.empresa;
+            
+            this.handler.sendUserd(res,empresa)
+
+            /*
             res.json({
                 status: 'ok',
                 data: {
@@ -322,9 +295,26 @@ class MidelContorler {
                     }]
                 }
             })
+            */
         })
-
-
+        this.router.post('/set/pregunta', (req, res) => {
+            var empresa = req.body.empresa;
+            var enunciado = req.body.enunciado;
+            var respuesta = req.body.respuesta
+            this.handler.SetPregunta(res,empresa,enunciado,respuesta)
+        })
+        this.router.post('/set/pokemon', (req, res) => {
+            var empresa = req.body.empresa;
+            var enunciado = req.body.enunciado;
+            var respuesta = req.body.respuesta
+            this.handler.SetPregunta(res,empresa,enunciado,respuesta)
+        })
+        
+        this.router.post('/use/api',(req,res)=>{
+            console.log("resiving api ")
+            //res.json({})
+            this.handler.makeReq(res)
+        })
 
     }
 
