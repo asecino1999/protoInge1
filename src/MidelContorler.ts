@@ -152,6 +152,7 @@ class MidelContorler {
             })
         })
         this.router.post('/loginUser', (req, res) => {
+            //if(!req.body.username)res.json({ status: " no username " })
             var userName: String = new String(req.body.username)
             var password: string = req.body.password
             // verificar datos 
@@ -307,14 +308,17 @@ class MidelContorler {
             res.json({
                 status: 'ok',
                 data: {
+                    
                     jugador: [{
                         urlImage: "https://icon-library.net/images/user-icon-jpg/user-icon-jpg-18.jpg",
                         nombre: "nombre del jugador",
+                        id:1,
                         puntaje: 20
                     }, {
                         urlImage: "https://icon-library.net/images/user-icon-jpg/user-icon-jpg-18.jpg",
                         nombre: "nombre del jugador",
-                        puntaje: 30
+                        puntaje: 30,
+                        id:2
                     }]
                 }
             })

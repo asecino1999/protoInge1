@@ -2,6 +2,7 @@
 
 import { createConnection, MysqlError } from 'mysql';
 import { isUndefined } from 'util';
+import { rejects } from 'assert';
 //import { rejects } from 'assert';
 //import { resolve } from 'dns';
 
@@ -114,8 +115,21 @@ class Database {
         })
 
     }
-    deleteFromPokedex(id_retodex:number){
+    deleteFromPokedex(id_retodex: number) {
         var borrarRetodex = "delete from retodex  where id=" + id_retodex;
+        return this.query(borrarRetodex)
+    }
+    moveReto(retos: any, id_pokemon: number, id_usuario: number, id_pregunta: number) {
+        return new Promise((resolve, reject) => {
+            if (!(retos instanceof Array) || isUndefined(retos[0])) reject({ err: " no encontro el pedido o request invalido " })
+            var borrarRetodex = "delete from retodex  where id=" + retos[0].id_retodex;
+            this.query(borrarRetodex)
+                .then(() => this.capturePokemon(id_pokemon, id_usuario, id_pregunta)
+                    .then((out) => resolve(out))
+                    .catch((err) => reject(err))
+                )
+                .catch((err) => { console.log(err); reject(err) })
+        })
     }
 
     setPokedex(id_pokemon: number, id_usuario: number, id_pregunta: number) {
@@ -123,27 +137,18 @@ class Database {
         // obtener los datos del pokemon 
         // tienes los id del usario 
         // tienes 
-        var getRetodex = "select p.id as id_pokemon , u.id as  id_usuario , r.id as id_retodex , r.id_pregunta  from pokemones as p, retodex as r ,usuarios as u where p.id=" + id_pokemon +
-            ' AND p.id_pregunta=r.id_pregunta AND  u.id=' + id_usuario + ' AND r.id_usuario=u.id;'
-        console.log("this.setPokedex", getRetodex)
+        var getRetodex = 'select p.id as id_pokemon , u.id as  id_usuario , r.id as id_retodex , r.id_pregunta ' +
+            'from pokemones as p, retodex as r ,usuarios as u ' +
+            'where p.id= ' + id_pokemon + ' AND p.id_pregunta=r.id_pregunta AND  u.id= ' + id_usuario + ' AND r.id_usuario=u.id;'
+        //console.log("this.setPokedex", getRetodex)
         return new Promise((resolve, reject) => {
             this.query(getRetodex)
-                .then((out) => {
-                    console.log("set pokedex 1 ", out)
-                    var data = JSON.parse(JSON.stringify(out))
-                    if (data instanceof Array && data.length > 0) {
-                        data.forEach((element) => {
-                            var borrarRetodex = "delete from retodex  where id=" + element.id_retodex;
-                            this.query(borrarRetodex)
-                                .then(() => this.capturePokemon(id_pokemon, id_usuario, id_pregunta)
-                                    .then((out) => resolve(out)))
-                                .catch((err) => { console.log(err); reject(err) })
-                        })
-                    } else {
-                        reject("no eocnotro el pedido" + getRetodex)
-                    }
-                })
-                .catch((err) => { console.log(err); reject(err) })
+                .then((out) => this.getNude(out))
+                .then((retos) => this.moveReto(retos, id_pokemon, id_usuario, id_pregunta)
+                    .then((out) => resolve(out))
+                    .catch((err) => reject(err))
+                )
+                .catch((err) => { console.log(err); reject({ err: err, consulta: getRetodex }) })
         })
         //borrar de retodex 
 
@@ -235,7 +240,7 @@ class Database {
     getFullUser(users: any): Promise<{}> {
         //if (users instanceof Array && !isUndefined(users[0])) {
         return new Promise((resolve, reject) => {
-            if (! (users instanceof Array) && isUndefined(users[0])) reject({users:users,err:"the is no user with"})
+            if (!(users instanceof Array) || isUndefined(users[0])) reject({ users: users, err: "the is no user with" })
             var user_id = users[0].id
             this.getDex(user_id)
                 .then((dex: Array<{}>) => resolve({ user: users[0], retodex: dex[0], pokedex: dex[1] }))
@@ -248,7 +253,7 @@ class Database {
 
 
     GetUserByUsername(username: String): Promise<{}> {
-        
+
         return new Promise((resolve, reject) => {
             this.getUserByUsername(username)
                 .then((users) => {
